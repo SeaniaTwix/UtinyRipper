@@ -1,4 +1,5 @@
-﻿using System.IO;
+using System.IO; 
+using System.Text;
 using UtinyRipper.Classes;
 
 using Object = UtinyRipper.Classes.Object;
@@ -39,6 +40,17 @@ namespace UtinyRipper.AssetExporters
 			using (FileStream fileStream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write))
 			{
 				asset.Asset.ExportBinary(exporter, fileStream);
+			}
+
+			// Exporting file without encoded in here with .bytes extension
+			if (asset.Asset.ClassIDName == "TextAsset") {
+				byte[] bytes = ((TextAsset)asset.Asset).OriginalBytes;
+				if (bytes != null)
+				{
+					FileStream fs = new FileStream(filePath + ".bytes", FileMode.CreateNew, FileAccess.Write);
+					fs.Write(bytes, 0, bytes.Length);
+					fs.Close();
+				}
 			}
 
 			ExportMeta(exporter, asset, filePath);

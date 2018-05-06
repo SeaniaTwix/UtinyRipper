@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using UtinyRipper.AssetExporters;
@@ -30,6 +30,8 @@ namespace UtinyRipper.Classes
 			{
 				PathName = stream.ReadStringAligned();
 			}
+			
+			OriginalBytes = stream.ob;
 		}
 
 		public override void ExportBinary(IAssetsExporter exporter, Stream stream)
@@ -52,6 +54,7 @@ namespace UtinyRipper.Classes
 		
 		public override string ExportExtension => "txt";
 
+		public byte[] OriginalBytes;
 		public string Script { get; private set; } = string.Empty;
 		public string PathName { get; private set; } = string.Empty;
 	}

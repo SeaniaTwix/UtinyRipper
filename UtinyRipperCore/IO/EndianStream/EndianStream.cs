@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 
@@ -174,6 +174,7 @@ namespace UtinyRipper
 		public string ReadStringAligned()
 		{
 			int length = ReadInt32();
+            blen = length;
 			return ReadStringAligned(length);
 		}
 
@@ -412,25 +413,33 @@ namespace UtinyRipper
 			BaseStream.Position = AlignPosition + position;
 		}
 
-		protected byte[] ReadStringBuffer(int length)
+		public byte[] ReadStringBuffer(int length)
 		{
 			if (m_bufferString.Length >= length)
 			{
 				int read = Read(m_bufferString, 0, length);
-				if (read < length)
-				{
+
+				if (read < length) {
 					throw new Exception($"Read {read} bytes intead of {length}");
 				}
+
 				return m_bufferString;
 			}
-			else
+			else 
 			{
 				byte[] buffer = new byte[length];
 				int read = Read(buffer, 0, length);
+
 				if (read < length)
 				{
 					throw new Exception($"Read {read} bytes intead of {length}");
 				}
+
+				if (buffer != null)
+				{
+						ob = buffer;
+				}
+
 				return buffer;
 			}
 		}
@@ -439,7 +448,10 @@ namespace UtinyRipper
 		public long AlignPosition { get; set; }
 
 		private const int StringBufferSize = 8096;
-		
+
+        public int blen;
+        public byte[] ob;
+
 		private readonly byte[] m_buffer16 = new byte[2];
 		private readonly byte[] m_buffer32 = new byte[4];
 		private readonly byte[] m_buffer64 = new byte[8];
